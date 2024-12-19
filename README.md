@@ -22,3 +22,4 @@ YOLO11n-pose summary (fused): 257 layers, 2,664,805 parameters, 0 gradients, 6.6
                    all        353        353          1          1      0.995      0.993          1          1      0.995      0.995
 Speed: 0.2ms preprocess, 2.8ms inference, 0.0ms loss, 3.4ms postprocess per image
 ```
+Более полная информация по обучению (параметры запуска, графики качества, примеры валидационных картинкок и пр.) тут - 2024-12-18.train.zip
