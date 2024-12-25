@@ -7,10 +7,6 @@ Dataset
 - http://test.bevz.space/robot/dataset/epoxy-level-2640.zip
 
 
-Sample
-------
-http://test.bevz.space/robot/epoxy_sample.ts
-
 Weights
 -------
 Веса дообученных моделей.
