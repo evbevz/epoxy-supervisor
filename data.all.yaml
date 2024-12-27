@@ -1,0 +1,9 @@
+kpt_shape:
+- 6
+- 3
+names:
+  0: epoxy level in injector
+path: .
+train: datasets/train.all.txt
+val: datasets/val.all.txt
+test: datasets/test.all.txt
