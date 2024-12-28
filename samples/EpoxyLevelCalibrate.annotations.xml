@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <job>
+      <id>1902853</id>
+      <size>1</size>
+      <mode>annotation</mode>
+      <overlap>0</overlap>
+      <bugtracker></bugtracker>
+      <created>2024-12-28 20:10:47.453891+00:00</created>
+      <updated>2024-12-28 20:16:45.509260+00:00</updated>
+      <subset>default</subset>
+      <start_frame>0</start_frame>
+      <stop_frame>0</stop_frame>
+      <frame_filter></frame_filter>
+      <segments>
+        <segment>
+          <id>1905319</id>
+          <start>0</start>
+          <stop>0</stop>
+          <url>https://app.cvat.ai/api/jobs/1902853</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>potashov@mail.ru</username>
+        <email>potashov@mail.ru</email>
+      </owner>
+      <assignee></assignee>
+      <labels>
+        <label>
+          <name>injector meter</name>
+          <color>#ff00cc</color>
+          <type>any</type>
+          <attributes>
+          </attributes>
+        </label>
+      </labels>
+    </job>
+    <dumped>2024-12-28 20:17:21.131124+00:00</dumped>
+  </meta>
+  <image id="0" name="injector axis.provector.png" width="1600" height="1200">
+    <polyline label="injector meter" source="manual" occluded="0" points="926.00,1104.20;937.50,1069.40;948.50,1034.50;960.40,998.90;971.20,964.00;983.40,927.50;993.50,894.60;1005.10,858.30;1014.80,824.50;1031.10,767.40;1045.70,705.20;1056.70,645.10;1063.00,588.50;1063.80,527.10;1062.50,476.60;1057.60,422.20;1052.10,371.00;1045.90,318.50;1039.80,266.80;1033.00,214.60;1026.80,159.80" z_order="0">
+    </polyline>
+  </image>
+</annotations>
