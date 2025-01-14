@@ -4,9 +4,6 @@ import os.path
 import torch
 from ultralytics import YOLO
 
-# Значение уверенности в правильности распознавания, ниже которого не будем считать, что точки определились правильно. Т.е. координаты такой точки будем считать ложными и точку игнорировать.
-kptConfidence = 0.8 # Сейчас точки если и распознаются, то с уверенностью больше 0.9
-
 # Косинусное сходство (Косинус угла между векторами)
 def cos_sim (v1, v2):
     cosine_similarity = torch.dot(v1, v2) / (torch.linalg.vector_norm(v1) * torch.linalg.vector_norm(v2))
@@ -34,7 +31,7 @@ def Calibrate (fAnnotation):
 
 # Получение центра эллипса по точкам: левой и правой большой оси, дальней и ближней малой оси.
 # Вычисляем через середину диагоналей эллипса. На будущее стоит просто определять bounding box этого эллипса. Модель будет выдавать уже как раз середину.
-def GetEllipseCenter (kpt):
+def GetEllipseCenter (kpt, kptConfidence):
     #print ("Левая точка большой оси:\t", kpt[0])
     #print ("Правая точка большой оси:\t", kpt[1])
     #print ("Дальняя точка малой оси:\t", kpt[2])
@@ -64,7 +61,7 @@ def GetEllipseCenter (kpt):
     return ellipse_center
 
 # Получение уровня эпоксидки по картинке
-def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam):
+def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence):
     # Запускаем предсказание
     results = model.predict(source=filenameInjectorCam, verbose=False)  # Предсказание по изображению. Возвращается список результатов (т.к. можно передать список кадров или даже видео)
     # Теоретически может быть список результатов, но берём только одно - первое.
@@ -73,8 +70,8 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam):
     #print ('--- Keypoints: ---\n', keypoints)
 
     # Высчитываем центр эллипса
-    # Передаем в параметре 4 точки диагоналей эллипса в виде тензора 4x3 [[x1,y2,confidence1],[]...]
-    ellipse_center = GetEllipseCenter(keypoints.data[0][2:6:])
+    # Передаем в параметре 4 точки диагоналей эллипса в виде тензора 4x3 [[x1,y2,confidence1],[]...] и коэффициент уверенности в правильности распознавания, ниже которого не будем считать, что точки определились правильно. Т.е. координаты такой точки будем считать ложными и точку игнорировать.
+    ellipse_center = GetEllipseCenter(keypoints.data[0][2:6:], kptConfidence)
 
     if ellipse_center is not None:
         # Переносим массив точек шприца на то же устройство рассчета где и тензоры модели предсказаний. Если расчёты велись на CUDA, то лучше там и считать всё остальное.
