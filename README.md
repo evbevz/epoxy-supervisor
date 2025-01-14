@@ -2,9 +2,9 @@
 
 Dataset
 -------
-- http://test.bevz.space/robot/dataset/epoxy-level-1774.zip
-- http://test.bevz.space/robot/dataset/epoxy-level-1140.zip
-- http://test.bevz.space/robot/dataset/epoxy-level-2640.zip
+- http://robot.bevz.space/dataset/epoxy-level-1774.zip
+- http://robot.bevz.space/dataset/epoxy-level-1140.zip
+- http://robot.bevz.space/dataset/epoxy-level-2640.zip
 
 
 Weights
