@@ -63,22 +63,16 @@ def GetEllipseCenter (kpt, kptConfidence):
     #print ("BAC: ", big_axis_center, "SAC: ", small_axis_center, "ELC:", ellipse_center)
     return ellipse_center
 
-# Получение уровня эпоксидки по картинке
-def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence):
-    # Запускаем предсказание
-    results = model.predict(source=filenameInjectorCam, verbose=False)  # Предсказание по изображению. Возвращается список результатов (т.к. можно передать список кадров или даже видео)
-    # Теоретически может быть список результатов, но берём только одно - первое.
-    keypoints = results[0].keypoints  # Keypoints object for pose outputs
-    #results[0].show()  # display to screen
-    #print ('--- Keypoints: ---\n', keypoints)
-
+def get_level_by_kpt (keypoints, kptConfidence, arrayEpoxyLevel):
+    #print ('--- Keypoints instance: ---\n', keypoints)
     # Высчитываем центр эллипса
     # Передаем в параметре 4 точки диагоналей эллипса в виде тензора 4x3 [[x1,y2,confidence1],[]...] и коэффициент уверенности в правильности распознавания, ниже которого не будем считать, что точки определились правильно. Т.е. координаты такой точки будем считать ложными и точку игнорировать.
-    ellipse_center = GetEllipseCenter(keypoints.data[0][2:6:], kptConfidence)
+    ellipse_center = GetEllipseCenter(keypoints.data[0][0:4:], kptConfidence)
 
     if ellipse_center is not None:
         # Переносим массив точек шприца на то же устройство рассчета где и тензоры модели предсказаний. Если расчёты велись на CUDA, то лучше там и считать всё остальное.
-        arrayEpoxyLevel = arrayEpoxyLevel.to(ellipse_center.device)
+        device = ellipse_center.device
+        arrayEpoxyLevel = arrayEpoxyLevel.to(device)
 
         # Вычисляем ближайшую калиброванную точку к предсказанной точке (середине эллипса)
         LengthMin = (keypoints.orig_shape[0] ** 2 + keypoints.orig_shape[1] ** 2) ** 0.5 # Нужно просто большое значение, но решил указать максимально возможное расстояние на изображении (диагональ)
@@ -95,11 +89,11 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence):
         # Определяем с какой стороны от ближайшей калиброванной точки уровня находится точка предсказания и на каком расстоянии
         vSrc = ellipse_center - arrayEpoxyLevel[LevelMin]
         if (LevelMin == (arrayEpoxyLevel.size(dim=0) - 1)): # Ограничение на верхний уровень инжектора
-            vNext = torch.tensor([0.0, 0.0])
+            vNext = torch.tensor([0.0, 0.0]).to(device)
         else:
             vNext = arrayEpoxyLevel[LevelMin+1] - arrayEpoxyLevel[LevelMin]
         if (LevelMin == 0): # Ограничение на нижний уровень инжектора
-            vPrev = torch.tensor([0.0, 0.0])
+            vPrev = torch.tensor([0.0, 0.0]).to(device)
         else:
             vPrev = arrayEpoxyLevel[LevelMin] - arrayEpoxyLevel[LevelMin-1]
 
@@ -125,3 +119,37 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence):
         return LevelMin + pr_ml
     else:
         return None
+
+# Получение уровня эпоксидки по картинке
+def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence, level_prev):
+    # Запускаем предсказание
+    results = model.predict(source=filenameInjectorCam, verbose=False)  # Предсказание по изображению. Возвращается список результатов (т.к. можно передать список кадров или даже видео)
+    #print ('--- Results[0].Boxes: ---\n', results[0].boxes)
+    #print ('--- Results[0].Keypoints: ---\n', results[0].keypoints)
+    # Теоретически может быть список результатов, но берём только одно - первое изображение для распознавания и определения уровня.
+    keypoints = results[0].keypoints  # Keypoints object for pose outputs
+    #results[0].show()  # display to screen
+    #print (f'--- Keypoints: ---\n {keypoints}')
+
+    # Если предсказание ничего не нашло на фото, то возвращаем предыдущий уровень
+    if keypoints.conf is None:
+        #print (f"Уровень не распознан. Прошлый уровень эпоксидки: {level_prev}")
+        return level_prev
+        
+    length_min = 20
+    # Если предыдущий уровень не определен, то скорее всего это первый вызов и тогда предполагаем, что инжектор заправлен максимально (20мл) и выбирать надо ближайший к максимальной заправке.
+    if level_prev is None:
+        level_prev = 20
+    # Из всех распознанных уровней эпоксидки выбираем ближайший по расстоянию к предыдущему уровню
+    for kpts_instance in keypoints:
+        level_cur = get_level_by_kpt(kpts_instance, kptConfidence, arrayEpoxyLevel)
+        if level_cur is None:
+            return None
+        length = abs(level_prev - level_cur)
+        if length < length_min:                         # Если расстояние между одним из предсказанных уровней и предыдущим наименьшее, то 
+            length_min = length                         # Запоминаем минимальное расстояние
+            level_near_prev = level_cur                 # Запоминаем уровень ближайший к предыдущему
+        #print (f"Previous lvl: {level_prev},\tCurrent lvl: {level_cur},\tLength between: {length}\tMin length: {length_min}")
+    #print (f"Ближайший уровень эпоксидки: {level_near_prev}")
+    return level_near_prev    
+
