@@ -124,7 +124,7 @@ def get_level_by_kpt (keypoints, kptConfidence, arrayEpoxyLevel):
 # Получение уровня эпоксидки по картинке
 def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence, level_prev):
     # Запускаем предсказание
-    results = model.predict(source=filenameInjectorCam, verbose=False, save=True)  # Предсказание по изображению. Возвращается список результатов (т.к. можно передать список кадров или даже видео)
+    results = model.predict(source=filenameInjectorCam, verbose=False, save=False)  # Предсказание по изображению. Возвращается список результатов (т.к. можно передать список кадров или даже видео)
     #print ('--- Results[0].Boxes: ---\n', results[0].boxes)
     #print ('--- Results[0].Keypoints: ---\n', results[0].keypoints)
     # Теоретически может быть список результатов, но берём только одно - первое изображение для распознавания и определения уровня.
