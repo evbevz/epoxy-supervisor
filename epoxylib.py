@@ -60,11 +60,11 @@ def GetEllipseCenter (kpt, kptConfidence):
         ellipse_center = small_axis_center
     else:
         ellipse_center = None
-    #print ("BAC: ", big_axis_center, "SAC: ", small_axis_center, "ELC:", ellipse_center)
+    #print("BAC: ", big_axis_center, "SAC: ", small_axis_center, "ELC:", ellipse_center)
     return ellipse_center
 
 def get_level_by_kpt (keypoints, kptConfidence, arrayEpoxyLevel):
-    #print ('--- Keypoints instance: ---\n', keypoints)
+    #print('--- Keypoints instance: ---\n', keypoints)
     # Высчитываем центр эллипса
     # Передаем в параметре 4 точки диагоналей эллипса в виде тензора 4x3 [[x1,y2,confidence1],[]...] и коэффициент уверенности в правильности распознавания, ниже которого не будем считать, что точки определились правильно. Т.е. координаты такой точки будем считать ложными и точку игнорировать.
     ellipse_center = GetEllipseCenter(keypoints.data[0][0:4:], kptConfidence)
@@ -115,9 +115,10 @@ def get_level_by_kpt (keypoints, kptConfidence, arrayEpoxyLevel):
         else:
             pr = 0
             pr_ml = 0
-        #print ("Длина проекции в пикселях: ", pr, "\tДлина проекции в мл: ", pr_ml)
+        #print("Длина проекции в пикселях: ", pr, "\tДлина проекции в мл: ", pr_ml)
         return LevelMin + pr_ml
     else:
+        #print("Ellipse_center is None.")
         return None
 
 # Получение уровня эпоксидки по картинке
@@ -133,7 +134,7 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence, l
 
     # Если предсказание ничего не нашло на фото, то возвращаем предыдущий уровень
     if keypoints.conf is None:
-        #print (f"Уровень не распознан. Прошлый уровень эпоксидки: {level_prev}")
+        #print(f"Уровень не распознан. Прошлый уровень эпоксидки: {level_prev}")
         return level_prev
         
     length_min = 20
@@ -144,7 +145,8 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence, l
     for kpts_instance in keypoints:
         level_cur = get_level_by_kpt(kpts_instance, kptConfidence, arrayEpoxyLevel)
         if level_cur is None:
-            return None
+            #print("level_cur is None")
+            break
         length = abs(level_prev - level_cur)
         if length < length_min:                         # Если расстояние между одним из предсказанных уровней и предыдущим наименьшее, то 
             length_min = length                         # Запоминаем минимальное расстояние

@@ -3,11 +3,8 @@
 Начиная с версии 1.0 поменялась структура возвращаемых параметров в модели распознавания уровня на изображении. И соответственно изменилась библиотека и вызов функции GetEpoxyLevel. Добавился атрибут предыдущего уровня эпоксидки. И для вызова необходимо использовать другую модель распознавания: http://robot.bevz.space/dataset/es.yolo11s-pose.20250121.epoch400.pt
 Пример использования в EpoxyLevel.ipynb
 
-Dataset
+Datasets
 -------
-- http://robot.bevz.space/dataset/epoxy-level-1774.zip
-- http://robot.bevz.space/dataset/epoxy-level-1140.zip
-- http://robot.bevz.space/dataset/epoxy-level-2640.zip
 - http://robot.bevz.space/dataset/epoxy-level-1-1774-new.zip
 - http://robot.bevz.space/dataset/epoxy-level-2-1140-new.zip
 - http://robot.bevz.space/dataset/epoxy-level-3-2640-new.zip
