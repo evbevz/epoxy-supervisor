@@ -19,7 +19,8 @@ def pr_vec (v1, v2):
 def Calibrate (fAnnotation):
     tree = etree.parse(fAnnotation)
     root = tree.getroot()
-    result = root.xpath('//polyline[@label="injector meter"]')
+    #result = root.xpath('//polyline[@label="injector meter"]')
+    result = root.xpath('//polyline[@label="centroid axis"]')
     if not(result):
         raise Exception("Не удалось найти polyline с точками уровней инжектора в файле: ", fAnnotation)
     points = result[0].attrib['points']
@@ -32,42 +33,24 @@ def Calibrate (fAnnotation):
 # Получение центра эллипса по точкам: левой и правой большой оси, дальней и ближней малой оси.
 # Вычисляем через середину диагоналей эллипса. На будущее стоит просто определять bounding box этого эллипса. Модель будет выдавать уже как раз середину.
 def GetEllipseCenter (kpt, kptConfidence):
-    #print ("Левая точка большой оси:\t", kpt[0])
-    #print ("Правая точка большой оси:\t", kpt[1])
-    #print ("Дальняя точка малой оси:\t", kpt[2])
-    #print ("Ближняя точка малой оси:\t", kpt[3])
-
+    #print('--- GetEllipseCenter Keypoints: ---\n', kpt)
     if len(kpt) == 0:
         return None
 
     # Проверяем уверенность в определении точки. Если показатель меньше заданного значения, то точку игнорируем.
-    # Середина между левой и правой точками большой диагонали эллипса
-    if (kpt[0][2] > kptConfidence) and (kpt[1][2] > kptConfidence):
-        big_axis_center = (kpt[0][0:2:] + kpt[1][0:2:]) / 2
-    else:
-        big_axis_center = None
-    # Середина между дальней и ближней точками малой диагонали эллипса
-    if (kpt[2][2] > kptConfidence) and (kpt[3][2] > kptConfidence):
-        small_axis_center = (kpt[2][0:2:] + kpt[3][0:2:]) / 2
-    else:
-        small_axis_center = None
-    # Середина между серединой большой и серединой малой диагоналей. Иногда может быть не равная серединам каждой из них (при ошибках в определении ключевых точек моделью).
-    if (big_axis_center is not None) and (small_axis_center is not None):
-        ellipse_center = (big_axis_center + small_axis_center) / 2
-    elif (big_axis_center is not None) and (small_axis_center is None):
-        ellipse_center = big_axis_center
-    elif (big_axis_center is None) and (small_axis_center is not None):
-        ellipse_center = small_axis_center
+    if (kpt[0][2] > kptConfidence) :
+        ellipse_center = kpt[0][0:2:]
     else:
         ellipse_center = None
-    #print("BAC: ", big_axis_center, "SAC: ", small_axis_center, "ELC:", ellipse_center)
     return ellipse_center
 
 def get_level_by_kpt (keypoints, kptConfidence, arrayEpoxyLevel):
     #print('--- Keypoints instance: ---\n', keypoints)
     # Высчитываем центр эллипса
     # Передаем в параметре 4 точки диагоналей эллипса в виде тензора 4x3 [[x1,y2,confidence1],[]...] и коэффициент уверенности в правильности распознавания, ниже которого не будем считать, что точки определились правильно. Т.е. координаты такой точки будем считать ложными и точку игнорировать.
-    ellipse_center = GetEllipseCenter(keypoints.data[0][0:4:], kptConfidence)
+    #ellipse_center = GetEllipseCenter(keypoints.data[0][0:4:], kptConfidence)
+    # Модель распознает четыре точки краев шприца и последнюю пятую точку центра эллипса/уровня эпоксидки. Поэтому передаем только точку центра
+    ellipse_center = GetEllipseCenter(keypoints.data[0][4:5:], kptConfidence)
 
     if ellipse_center is not None:
         # Переносим массив точек шприца на то же устройство рассчета где и тензоры модели предсказаний. Если расчёты велись на CUDA, то лучше там и считать всё остальное.
@@ -137,7 +120,7 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence, l
         #print(f"Уровень не распознан. Прошлый уровень эпоксидки: {level_prev}")
         return level_prev
         
-    length_min = 20
+    length_min = 21
     # Если предыдущий уровень не определен, то скорее всего это первый вызов и тогда предполагаем, что инжектор заправлен максимально (20мл) и выбирать надо ближайший к максимальной заправке.
     if level_prev is None:
         level_prev = 20
