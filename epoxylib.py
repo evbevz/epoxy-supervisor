@@ -125,6 +125,7 @@ def GetEpoxyLevel (model, arrayEpoxyLevel, filenameInjectorCam, kptConfidence, l
     if level_prev is None:
         level_prev = 20
     # Из всех распознанных уровней эпоксидки выбираем ближайший по расстоянию к предыдущему уровню
+    level_near_prev = None
     for kpts_instance in keypoints:
         level_cur = get_level_by_kpt(kpts_instance, kptConfidence, arrayEpoxyLevel)
         if level_cur is None:
