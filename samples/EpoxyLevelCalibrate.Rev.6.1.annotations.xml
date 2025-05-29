@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <task>
+      <id>1380208</id>
+      <name>Rev 6.1 axis</name>
+      <size>19</size>
+      <mode>annotation</mode>
+      <overlap>0</overlap>
+      <bugtracker></bugtracker>
+      <created>2025-05-12 09:36:33.538169+00:00</created>
+      <updated>2025-05-12 15:37:54.940954+00:00</updated>
+      <subset>default</subset>
+      <start_frame>0</start_frame>
+      <stop_frame>18</stop_frame>
+      <frame_filter></frame_filter>
+      <segments>
+        <segment>
+          <id>2448636</id>
+          <start>0</start>
+          <stop>18</stop>
+          <url>https://app.cvat.ai/api/jobs/2446359</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>evbevz</username>
+        <email>evbevz@gmail.com</email>
+      </owner>
+      <assignee></assignee>
+      <labels>
+        <label>
+          <name>injector</name>
+          <color>#e6e600</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>centroid axis</name>
+          <color>#ff00cc</color>
+          <type>polyline</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>level</name>
+          <color>#226376</color>
+          <type>skeleton</type>
+          <attributes>
+          </attributes>
+          <svg>&lt;line x1="54.34782791137695" y1="60.11705780029297" x2="47.15719223022461" y2="36.87290954589844" data-type="edge" data-node-from="4" data-node-to="5"&gt;&lt;/line&gt;
+&lt;line x1="37.792640686035156" y1="59.949832916259766" x2="47.15719223022461" y2="36.87290954589844" data-type="edge" data-node-from="3" data-node-to="5"&gt;&lt;/line&gt;
+&lt;line x1="55.35116958618164" y1="15.46822738647461" x2="47.15719223022461" y2="36.87290954589844" data-type="edge" data-node-from="2" data-node-to="5"&gt;&lt;/line&gt;
+&lt;line x1="38.294315338134766" y1="15.301003456115723" x2="47.15719223022461" y2="36.87290954589844" data-type="edge" data-node-from="1" data-node-to="5"&gt;&lt;/line&gt;
+&lt;circle r="0.75" cx="38.294315338134766" cy="15.301003456115723" data-type="element node" data-element-id="1" data-node-id="1" data-label-name="TL"&gt;&lt;/circle&gt;
+&lt;circle r="0.75" cx="55.35116958618164" cy="15.46822738647461" data-type="element node" data-element-id="2" data-node-id="2" data-label-name="TR"&gt;&lt;/circle&gt;
+&lt;circle r="0.75" cx="37.792640686035156" cy="59.949832916259766" data-type="element node" data-element-id="3" data-node-id="3" data-label-name="BL"&gt;&lt;/circle&gt;
+&lt;circle r="0.75" cx="54.34782791137695" cy="60.11705780029297" data-type="element node" data-element-id="4" data-node-id="4" data-label-name="BR"&gt;&lt;/circle&gt;
+&lt;circle r="0.75" cx="47.15719223022461" cy="36.87290954589844" data-type="element node" data-element-id="5" data-node-id="5" data-label-name="Level"&gt;&lt;/circle&gt;</svg>
+        </label>
+        <label>
+          <name>TL</name>
+          <color>#7ea329</color>
+          <type>points</type>
+          <attributes>
+          </attributes>
+          <parent>level</parent>
+        </label>
+        <label>
+          <name>TR</name>
+          <color>#8f1662</color>
+          <type>points</type>
+          <attributes>
+          </attributes>
+          <parent>level</parent>
+        </label>
+        <label>
+          <name>BL</name>
+          <color>#5d68bd</color>
+          <type>points</type>
+          <attributes>
+          </attributes>
+          <parent>level</parent>
+        </label>
+        <label>
+          <name>BR</name>
+          <color>#178f02</color>
+          <type>points</type>
+          <attributes>
+          </attributes>
+          <parent>level</parent>
+        </label>
+        <label>
+          <name>Level</name>
+          <color>#d90bb8</color>
+          <type>points</type>
+          <attributes>
+          </attributes>
+          <parent>level</parent>
+        </label>
+      </labels>
+    </task>
+    <dumped>2025-05-12 15:46:59.142816+00:00</dumped>
+  </meta>
+  <image id="0" name="reper-points/01ml.png" width="1200" height="1200">
+    <polyline label="centroid axis" source="manual" occluded="0" points="740.90,1088.80;739.20,1059.70;737.50,1030.70;735.90,1003.30;734.10,969.20;732.40,921.30;730.70,869.90;729.00,813.70;727.30,762.30;727.30,704.10;729.00,642.60;729.00,581.20;730.70,504.20;732.40,428.90;734.10,358.90;735.80,287.00;739.20,215.20;741.00,164.00;744.40,112.80;747.80,71.80;749.50,37.50" z_order="0">
+    </polyline>
+    <box label="injector" source="manual" occluded="0" xtl="525.56" ytl="1.62" xbr="927.27" ybr="1199.90" z_order="0">
+    </box>
+  </image>
+</annotations>
